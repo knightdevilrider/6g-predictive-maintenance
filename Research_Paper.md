@@ -31,3 +31,6 @@ The model's outputs were segmented into three actionable risk categories:
 1. **Transition to Prescriptive Maintenance:** Floor managers should transition from reactive ticketing to a prescriptive workflow, prioritizing assets flagged as "Medium Risk" to prevent them from cascading into "High Risk" critical downtime.
 2. **Network-Hardware Interdependency Tracking:** Given the strong correlation between 6G packet loss and subsequent mechanical instability, IT and OT (Operational Technology) teams must unify their monitoring dashboards.
 3. **Continuous Model Retraining:** As manufacturing hardware ages, the "normal" baseline will naturally drift. The Isolation Forest model should be retrained bi-weekly on a rolling window of recent historical data to prevent false positives.
+
+## 5. Conclusion
+This project introduces preventive intelligence into 6G-enabled smart manufacturing. Unlike systems which focus on classifying current efficiency, this project predicts future machine health risks by detecting abnormal behavior patterns long before efficiency declines or failures occur. This makes a maintenance-centric, risk-prediction system fundamentally different in purpose, modeling approach, and business value.
