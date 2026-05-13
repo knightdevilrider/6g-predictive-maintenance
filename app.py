@@ -1,5 +1,17 @@
 import streamlit as st
 import pandas as pd
+import base64
+
+def get_base64_of_bin_file(bin_file):
+    try:
+        with open(bin_file, 'rb') as f:
+            data = f.read()
+        return base64.b64encode(data).decode()
+    except:
+        return ""
+
+bg_img = get_base64_of_bin_file("background.png")
+
 pd.set_option("styler.render.max_elements", 2000000)
 import numpy as np
 from sklearn.ensemble import IsolationForest
@@ -25,22 +37,21 @@ st.markdown("""
         100% { opacity: 1; transform: translateY(0); }
     }
     
-    @keyframes moveBackground {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
-    }
-    
     @keyframes slideInRight {
         0% { opacity: 0; transform: translateX(50px); }
         100% { opacity: 1; transform: translateX(0); }
     }
     
-    /* Base App Styling - 3D Moving Live Background */
+    @keyframes pulseAlert {
+        0% { box-shadow: 0 0 15px rgba(255, 75, 75, 0.4); }
+        50% { box-shadow: 0 0 30px rgba(255, 75, 75, 0.8); }
+        100% { box-shadow: 0 0 15px rgba(255, 75, 75, 0.4); }
+    }
+    
+    /* Base App Styling */
     .stApp {
-        background: linear-gradient(-45deg, #0b0f19, #1a1a2e, #002244, #001122, #0b0f19);
-        background-size: 400% 400%;
-        animation: moveBackground 20s ease infinite, fadeIn 1s ease-out;
+        background-color: #0b0f19;
+        animation: fadeIn 1s ease-out;
     }
     
     .stTabs {
@@ -58,9 +69,39 @@ st.markdown("""
     
     /* Glassmorphism Sidebar */
     [data-testid="stSidebar"] {
-        background: rgba(15, 15, 26, 0.7) !important;
+        background: rgba(15, 15, 26, 0.4) !important;
+        backdrop-filter: blur(20px);
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    /* Glassmorphism Metric Panels */
+    [data-testid="stMetric"], [data-testid="stVerticalBlock"] > div > div > div > div {
+        background: rgba(15, 15, 26, 0.6) !important;
+        backdrop-filter: blur(12px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 12px !important;
+    }
+    
+    /* Metallic Sliders */
+    .stSlider > div > div > div > div {
+        background: linear-gradient(180deg, #4A90E2 0%, #002244 100%) !important;
+        box-shadow: inset 0 1px 1px rgba(255,255,255,0.4), 0 0 10px rgba(74,144,226,0.5) !important;
+        border: 1px solid #4A90E2 !important;
+    }
+    
+    /* Pulsing Notification Bar */
+    .pulsing-alert {
+        background: rgba(255, 75, 75, 0.15);
+        border: 1px solid #FF4B4B;
+        border-radius: 8px;
+        padding: 15px;
+        color: #FF4B4B;
+        font-weight: bold;
+        text-align: center;
+        box-shadow: 0 0 15px rgba(255, 75, 75, 0.4);
+        animation: pulseAlert 2s infinite;
+        margin-bottom: 20px;
         backdrop-filter: blur(10px);
-        border-right: 1px solid rgba(255, 255, 255, 0.05);
     }
     
     /* Micro-animations on Layout Blocks */
@@ -233,6 +274,7 @@ medium_risk_count = len(filtered_df[filtered_df['Risk_Level'] == 'Medium Risk'])
 # --- FUTURISTIC NOTIFICATIONS & MACRO ANIMATION ---
 if high_risk_count > 0:
     st.toast(f"🚨 CRITICAL ALERT: {high_risk_count} High-Risk Anomalies Detected!", icon="🚨")
+    st.markdown('<div class="pulsing-alert">🚨 URGENT INTERVENTION REQUIRED: Machines are exhibiting critical anomalies.</div>', unsafe_allow_html=True)
 else:
     st.toast("✅ System Stable. 6G Network Optimal.", icon="✅")
     st.balloons()
@@ -244,10 +286,13 @@ with col1:
         value = high_risk_count,
         title = {'text': "Total High-Risk Alerts", 'font': {'size': 20, 'color': '#FF4B4B'}},
         gauge = {
-            'axis': {'range': [0, gauge_max]},
-            'bar': {'color': "#FF4B4B"},
+            'axis': {'range': [0, gauge_max], 'tickwidth': 1, 'tickcolor': "rgba(255,255,255,0.5)"},
+            'bar': {'color': "#FF0033", 'thickness': 0.25},
+            'bgcolor': "rgba(255,0,0,0.05)",
+            'borderwidth': 2,
+            'bordercolor': "rgba(255,0,0,0.3)",
             'steps': [
-                {'range': [0, gauge_max*0.5], 'color': "rgba(0, 204, 150, 0.2)"},
+                {'range': [0, gauge_max*0.5], 'color': "rgba(255, 255, 255, 0.02)"},
                 {'range': [gauge_max*0.5, gauge_max], 'color': "rgba(255, 75, 75, 0.2)"}
             ]
         }
@@ -262,8 +307,14 @@ with col2:
         mode = "gauge+number",
         value = dynamic_downtime,
         number = {'suffix': " hrs"},
-        title = {'text': "Downtime Prevented", 'font': {'size': 20, 'color': '#00CC96'}},
-        gauge = {'axis': {'range': [0, gauge_max2]}, 'bar': {'color': "#00CC96"}}
+        title = {'text': "Downtime Prevented", 'font': {'size': 20, 'color': '#00FF9D'}},
+        gauge = {
+            'axis': {'range': [0, gauge_max2], 'tickwidth': 1, 'tickcolor': "rgba(255,255,255,0.5)"}, 
+            'bar': {'color': "#00FF9D", 'thickness': 0.25},
+            'bgcolor': "rgba(0,255,157,0.05)",
+            'borderwidth': 2,
+            'bordercolor': "rgba(0,255,157,0.3)",
+        }
     ))
     fig_gauge2.update_layout(height=250, margin=dict(l=40, r=40, t=40, b=10), paper_bgcolor="rgba(0,0,0,0)", font={'color': "white"})
     st.plotly_chart(fig_gauge2, use_container_width=True)
@@ -274,8 +325,14 @@ with col3:
         mode = "gauge+number",
         value = early_warning_lead_time_hrs,
         number = {'suffix': " hrs"},
-        title = {'text': "AI Advance Warning Time", 'font': {'size': 20, 'color': '#4A90E2'}},
-        gauge = {'axis': {'range': [0, gauge_max3]}, 'bar': {'color': "#4A90E2"}}
+        title = {'text': "AI Advance Warning Time", 'font': {'size': 20, 'color': '#00D4FF'}},
+        gauge = {
+            'axis': {'range': [0, gauge_max3], 'tickwidth': 1, 'tickcolor': "rgba(255,255,255,0.5)"}, 
+            'bar': {'color': "#00D4FF", 'thickness': 0.25},
+            'bgcolor': "rgba(0,212,255,0.05)",
+            'borderwidth': 2,
+            'bordercolor': "rgba(0,212,255,0.3)",
+        }
     ))
     fig_gauge3.update_layout(height=250, margin=dict(l=40, r=40, t=40, b=10), paper_bgcolor="rgba(0,0,0,0)", font={'color': "white"})
     st.plotly_chart(fig_gauge3, use_container_width=True)
