@@ -25,10 +25,26 @@ st.markdown("""
         100% { opacity: 1; transform: translateY(0); }
     }
     
-    /* Base App Styling */
+    @keyframes moveBackground {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    
+    @keyframes slideInRight {
+        0% { opacity: 0; transform: translateX(50px); }
+        100% { opacity: 1; transform: translateX(0); }
+    }
+    
+    /* Base App Styling - 3D Moving Live Background */
     .stApp {
-        background: radial-gradient(circle at top, #1a1a2e 0%, #0f0f1a 100%);
-        animation: fadeIn 0.8s ease-out;
+        background: linear-gradient(-45deg, #0b0f19, #1a1a2e, #002244, #001122, #0b0f19);
+        background-size: 400% 400%;
+        animation: moveBackground 20s ease infinite, fadeIn 1s ease-out;
+    }
+    
+    .stTabs {
+        animation: slideInRight 1.2s ease-out forwards;
     }
     
     /* Typography Enhancements */
@@ -213,6 +229,13 @@ col1, col2, col3 = st.columns(3)
 
 high_risk_count = len(filtered_df[filtered_df['Risk_Level'] == 'High Risk'])
 medium_risk_count = len(filtered_df[filtered_df['Risk_Level'] == 'Medium Risk'])
+
+# --- FUTURISTIC NOTIFICATIONS & MACRO ANIMATION ---
+if high_risk_count > 0:
+    st.toast(f"🚨 CRITICAL ALERT: {high_risk_count} High-Risk Anomalies Detected!", icon="🚨")
+else:
+    st.toast("✅ System Stable. 6G Network Optimal.", icon="✅")
+    st.balloons()
 
 with col1:
     gauge_max = max(100, high_risk_count * 2)
