@@ -274,7 +274,6 @@ medium_risk_count = len(filtered_df[filtered_df['Risk_Level'] == 'Medium Risk'])
 # --- FUTURISTIC NOTIFICATIONS & MACRO ANIMATION ---
 if high_risk_count > 0:
     st.toast(f"🚨 CRITICAL ALERT: {high_risk_count} High-Risk Anomalies Detected!", icon="🚨")
-    st.markdown('<div class="pulsing-alert">🚨 URGENT INTERVENTION REQUIRED: Machines are exhibiting critical anomalies.</div>', unsafe_allow_html=True)
 else:
     st.toast("✅ System Stable. 6G Network Optimal.", icon="✅")
     st.balloons()
